@@ -39,6 +39,7 @@ class SearchEmployeeContainer extends Component {
     render() {
         return (
             <>
+                <Header />
                 <SearchForm
                     search={this.state.search}
                     handleFormSubmit={this.handleFormSubmit}
