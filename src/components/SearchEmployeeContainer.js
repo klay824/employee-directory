@@ -13,13 +13,7 @@ class SearchEmployeeContainer extends Component {
     };
 
     get initSort() {
-        return {
-            name: "",
-            phone: "",
-            email: "",
-            age: "",
-            location: ""
-        };
+        return { name: "" };
     }
 
     // When this component mounts, load all employees from API
