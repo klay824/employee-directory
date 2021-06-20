@@ -5,7 +5,7 @@ import SearchEmployeeContainer from "./components/SearchEmployeeContainer";
 function App() {
   return <>
     <Header />
-    <SearchEmployeeContainer />;
+    <SearchEmployeeContainer />
   </>
 }
 
