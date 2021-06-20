@@ -7,7 +7,9 @@ function EmployeeTable(props) {
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Photo</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">
+                        <span onClick={() => props.sortBy("name", "last", "first")}>Name</span>
+                    </th>
                     <th scope="col">Phone</th>
                     <th scope="col">Email</th>
                     <th scope="col">Age</th>
