@@ -34,7 +34,7 @@ class SearchEmployeeContainer extends Component {
     handleInputChange = (event) => {
         const value = event.target.value;
         this.setState({ search: value });
-        this.filterByName(value.toLowerCase().trim());
+        this.searchByEmployee(value.toLowerCase().trim());
     };
 
     // From submission for searching for employees by name
@@ -77,14 +77,14 @@ class SearchEmployeeContainer extends Component {
         }
     };
 
-    filterByName = (input) => {
+    searchByEmployee = (input) => {
         if (input) {
             this.setState({
                 filteredResults: this.state.results.filter((employee) => {
                     return (
                         employee.name.first
                             .toLowerCase()
-                            .concat(" ", employee.name.last.toLowerCase())
+                            .toLowerCase()
                             .includes(input)
                     );
                 }),
@@ -100,13 +100,13 @@ class SearchEmployeeContainer extends Component {
                 <Header />
                 <SearchForm
                     value={this.state.search}
-                    handleFormSubmit={this.handleFormSubmit}
                     handleInputChange={this.handleInputChange}
+                    handleFormSubmit={this.handleFormSubmit}
                 />
                 <EmployeeTable
                     results={this.state.results}
                     sortBy={this.sortBy}
-                    filterByName={this.filterByName}
+                    searchByEmployee={this.searchByEmployee}
                 />
 
             </>
