@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import SearchForm from "./SearchForm";
+import Header from "./Header";
+import EmployeeTable from "./EmployeeTable";
 import API from "../utils/API";
 
 class SearchEmployeeContainer extends Component {
@@ -8,7 +10,7 @@ class SearchEmployeeContainer extends Component {
         results: []
     };
 
-    // When this component mounts, search the Giphy API for pictures of kittens
+    // When this component mounts, load all employees from API
     componentDidMount() {
         this.showEmployees();
     }
@@ -16,36 +18,37 @@ class SearchEmployeeContainer extends Component {
     showEmployees = () => {
         API.getEmployee()
             .then(res => {
-                console.log(res);
-                this.setState({ results: res.data.data })
+                console.log(res.data.results);
+                this.setState({ results: res.data.results })
             })
             .catch(err => console.log(err));
     };
 
     handleInputChange = event => {
-        const name = event.target.name;
         const value = event.target.value;
         this.setState({
-            [name]: value
+            search: value
         });
     };
 
-    // When the form is submitted, search the Giphy API for `this.state.search`
+    // From submission for searching for employees by name
     handleFormSubmit = event => {
         event.preventDefault();
-        this.searchGiphy(this.state.search);
     };
 
     render() {
         return (
-            <div>
+            <>
                 <SearchForm
                     search={this.state.search}
                     handleFormSubmit={this.handleFormSubmit}
                     handleInputChange={this.handleInputChange}
                 />
+                <EmployeeTable
+                    results={this.state.results}
+                />
 
-            </div>
+            </>
         );
     }
 }
