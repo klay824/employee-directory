@@ -9,12 +9,12 @@ class SearchEmployeeContainer extends Component {
         search: "",
         results: [],
         filteredResults: [],
-        sortResults: this.initSort
+        currentSort: "default"
     };
 
-    get initSort() {
-        return { name: "" };
-    }
+    // get initSort() {
+    //     return { name: "" };
+    // }
 
     // When this component mounts, load all employees from API
     componentDidMount() {
@@ -32,9 +32,11 @@ class SearchEmployeeContainer extends Component {
     };
 
     handleInputChange = (event) => {
-        const value = event.target.value;
-        this.setState({ search: value });
-        this.searchByEmployee(value.toLowerCase().trim());
+        console.log(event);
+        const value = event.target.value.toLowerCase();
+        const newFilteredResults = this.state.results.filter(employee => employee.name.first.toLowerCase().indexOf(value) >= 0 || employee.name.last.toLowerCase().indexOf(value) >= 0);
+        console.log(newFilteredResults);
+        this.setState({ search: value, filteredResults: newFilteredResults })
     };
 
     // From submission for searching for employees by name
@@ -42,57 +44,74 @@ class SearchEmployeeContainer extends Component {
         event.preventDefault();
     };
 
-    sortBy = (key, primary = 0, secondary = 0) => {
-        let sortedEmps = this.state.filteredResults;
-        if (this.state.sortResults[key]) {
-            this.setState({
-                filteredResults: sortedEmps.reverse(),
-                sortResults: {
-                    ...this.initSort,
-                    [key]: this.state.sortResults[key] === "asc" ? "desc" : "asc"
-                },
-            });
-        } else {
-            sortedEmps = this.state.filteredResults.sort((a, b) => {
-                a = a[key];
-                b = b[key];
+    onSortChange = () => {
+        const { currentSort } = this.state;
+        let nextSort;
 
-                if (primary) {
-                    if (secondary && a[primary] === b[primary]) {
-
-                    }
-                    return a[secondary].localeCompare(b[secondary]);
-                } else {
-                    return a.localeCompare(b);
-                }
-            });
-
-            this.setState({
-                filteredResults: sortedEmps,
-                sortResults: {
-                    ...this.initSort,
-                    [key]: "asc",
-                },
-            });
+        if (currentSort === "down") {
+            nextSort = "up";
+        } else if (currentSort === "up") {
+            nextSort = "default";
+        } else if (currentSort === "default") {
+            nextSort = "down";
         }
+
+        this.setState({
+            currentSort: nextSort
+        });
     };
 
-    searchByEmployee = (input) => {
-        if (input) {
-            this.setState({
-                filteredResults: this.state.results.filter((employee) => {
-                    return (
-                        employee.name.first
-                            .toLowerCase()
-                            .toLowerCase()
-                            .includes(input)
-                    );
-                }),
-            });
-        } else {
-            this.setState({ filteredResults: this.state.results });
-        }
-    };
+    // sortBy = (key, primary = 0, secondary = 0) => {
+    //     let sortedEmps = this.state.filteredResults;
+    //     if (this.state.sortResults[key]) {
+    //         this.setState({
+    //             filteredResults: sortedEmps.reverse(),
+    //             sortResults: {
+    //                 ...this.initSort,
+    //                 [key]: this.state.sortResults[key] === "asc" ? "desc" : "asc"
+    //             },
+    //         });
+    //     } else {
+    //         sortedEmps = this.state.filteredResults.sort((a, b) => {
+    //             a = a[key];
+    //             b = b[key];
+
+    //             if (primary) {
+    //                 if (secondary && a[primary] === b[primary]) {
+
+    //                 }
+    //                 return a[secondary].localeCompare(b[secondary]);
+    //             } else {
+    //                 return a.localeCompare(b);
+    //             }
+    //         });
+
+    //         this.setState({
+    //             filteredResults: sortedEmps,
+    //             sortResults: {
+    //                 ...this.initSort,
+    //                 [key]: "asc",
+    //             },
+    //         });
+    //     }
+    // };
+
+    // searchByEmployee = (input) => {
+    //     if (input) {
+    //         this.setState({
+    //             filteredResults: this.state.results.filter((employee) => {
+    //                 return (
+    //                     employee.name.first
+    //                         .toLowerCase()
+    //                         .toLowerCase()
+    //                         .includes(input)
+    //                 );
+    //             }),
+    //         });
+    //     } else {
+    //         this.setState({ filteredResults: this.state.results });
+    //     }
+    // };
 
     render() {
         return (
@@ -105,8 +124,9 @@ class SearchEmployeeContainer extends Component {
                 />
                 <EmployeeTable
                     results={this.state.results}
-                    sortBy={this.sortBy}
-                    searchByEmployee={this.searchByEmployee}
+                    filteredResults={this.state.filteredResults}
+                    onSortChange={this.state}
+                // sortBy={this.sortBy}
                 />
             </div>
         );

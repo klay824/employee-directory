@@ -19,7 +19,7 @@ function EmployeeTable(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.results.map((result, index) => {
+                    {props.filteredResults.map((result, index) => {
                         const { first, last } = result.name;
                         const fullName = `${first} ${last}`;
                         const { city, state } = result.location;
