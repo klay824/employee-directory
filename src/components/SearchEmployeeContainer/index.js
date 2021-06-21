@@ -3,7 +3,6 @@ import SearchForm from "../SearchForm";
 import Header from "../Header";
 import EmployeeTable from "../EmployeeTable";
 import API from "../../utils/API";
-import "./style.css";
 
 class SearchEmployeeContainer extends Component {
     state = {
