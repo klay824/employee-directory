@@ -12,6 +12,7 @@ class SearchEmployeeContainer extends Component {
         filteredResults: []
     };
 
+    // list of table headings to be mapped in the table
     tableHeadings = [
         { name: "ID" },
         { name: "Photo" },
@@ -37,6 +38,7 @@ class SearchEmployeeContainer extends Component {
             .catch((err) => console.log(err));
     };
 
+    // as the user types, it begins to search the results to filter out the specific employee being searched for
     handleInputChange = (event) => {
         console.log(event);
         const value = event.target.value.toLowerCase();
@@ -53,6 +55,7 @@ class SearchEmployeeContainer extends Component {
 
 
     handleSort = heading => {
+        // sets the order to "descend" or "ascend"
         if (this.state.order === "descend") {
             this.setState({
                 order: "ascend"
@@ -63,7 +66,8 @@ class SearchEmployeeContainer extends Component {
             })
         }
 
-        const compareFnc = (a, b) => {
+        // comparison function to compare each heading to determine order of Names
+        const compareFunc = (a, b) => {
             if (this.state.order === "ascend") {
                 //account for missing values
                 if (a[heading] === undefined) {
@@ -92,77 +96,11 @@ class SearchEmployeeContainer extends Component {
                 }
             }
         }
-        const sortedUsers = this.state.filteredResults.sort(compareFnc);
+        const sortedUsers = this.state.filteredResults.sort(compareFunc);
         this.setState({ filteredResults: sortedUsers });
     }
 
-    // onSortChange = () => {
-    //     const sortTypes = {
-    //         up: {
-    //             class: 'sort-up',
-    //             fn: (a, b) => a.this.state.results.name.first - b.this.state.results.name.first
-    //         },
-    //         down: {
-    //             class: 'sort-down',
-    //             fn: (a, b) => b.this.state.results.name.first - a.this.state.results.name.first
-    //         },
-    //         default: {
-    //             class: 'sort',
-    //             fn: (a, b) => a
-    //         }
-    //     };
-
-    //     const { currentSort } = this.state;
-    //     let nextSort;
-
-    //     if (currentSort === "down") {
-    //         nextSort = "up";
-    //     } else if (currentSort === "up") {
-    //         nextSort = "default";
-    //     } else if (currentSort === "default") {
-    //         nextSort = "down";
-    //     }
-
-    //     this.setState({
-    //         currentSort: nextSort
-    //     });
-    // };
-
-    // sortBy = (key, primary = 0, secondary = 0) => {
-    //     let sortedEmps = this.state.filteredResults;
-    //     if (this.state.sortResults[key]) {
-    //         this.setState({
-    //             filteredResults: sortedEmps.reverse(),
-    //             sortResults: {
-    //                 ...this.initSort,
-    //                 [key]: this.state.sortResults[key] === "asc" ? "desc" : "asc"
-    //             },
-    //         });
-    //     } else {
-    //         sortedEmps = this.state.filteredResults.sort((a, b) => {
-    //             a = a[key];
-    //             b = b[key];
-
-    //             if (primary) {
-    //                 if (secondary && a[primary] === b[primary]) {
-
-    //                 }
-    //                 return a[secondary].localeCompare(b[secondary]);
-    //             } else {
-    //                 return a.localeCompare(b);
-    //             }
-    //         });
-
-    //         this.setState({
-    //             filteredResults: sortedEmps,
-    //             sortResults: {
-    //                 ...this.initSort,
-    //                 [key]: "asc",
-    //             },
-    //         });
-    //     }
-    // };
-
+    // renders each component
     render() {
         return (
             <div className="container">

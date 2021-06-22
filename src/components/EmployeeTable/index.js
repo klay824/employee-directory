@@ -7,7 +7,8 @@ function EmployeeTable({ filteredResults, tableHeadings, handleSort }) {
             <table className="table col-10">
                 <thead>
                     <tr>
-                        {tableHeadings.map(({ name, }) => {
+                        {/* maps over table headings to render them all */}
+                        {tableHeadings.map(({ name }) => {
                             return (
                                 <th className="nameCol"
                                     key={name}
@@ -22,6 +23,7 @@ function EmployeeTable({ filteredResults, tableHeadings, handleSort }) {
                     </tr>
                 </thead>
                 <tbody>
+                    {/* maps over results to map them to the table */}
                     {filteredResults.map((result, index) => {
                         const { first, last } = result.name;
                         const fullName = `${first} ${last}`;
