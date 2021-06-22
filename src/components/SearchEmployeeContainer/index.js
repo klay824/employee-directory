@@ -8,13 +8,19 @@ class SearchEmployeeContainer extends Component {
     state = {
         search: "",
         results: [],
-        filteredResults: [],
-        currentSort: "default"
+        order: "descend",
+        filteredResults: []
     };
 
-    // get initSort() {
-    //     return { name: "" };
-    // }
+    tableHeadings = [
+        { name: "ID" },
+        { name: "Photo" },
+        { name: "Name" },
+        { name: "Phone" },
+        { name: "Email" },
+        { name: "Age" },
+        { name: "Location" }
+    ]
 
     // When this component mounts, load all employees from API
     componentDidMount() {
@@ -44,22 +50,83 @@ class SearchEmployeeContainer extends Component {
         event.preventDefault();
     };
 
-    onSortChange = () => {
-        const { currentSort } = this.state;
-        let nextSort;
 
-        if (currentSort === "down") {
-            nextSort = "up";
-        } else if (currentSort === "up") {
-            nextSort = "default";
-        } else if (currentSort === "default") {
-            nextSort = "down";
+
+    handleSort = heading => {
+        if (this.state.order === "descend") {
+            this.setState({
+                order: "ascend"
+            })
+        } else {
+            this.setState({
+                order: "descend"
+            })
         }
 
-        this.setState({
-            currentSort: nextSort
-        });
-    };
+        const compareFnc = (a, b) => {
+            if (this.state.order === "ascend") {
+                //account for missing values
+                if (a[heading] === undefined) {
+                    return 1;
+                } else if (b[heading] === undefined) {
+                    return -1;
+                }
+                //numerically
+                else if (heading === "name") {
+                    return a[heading].first.localeCompare(b[heading].first);
+                } else {
+                    return a[heading] - b[heading];
+                }
+            } else {
+                //(account for missing values
+                if (a[heading] === undefined) {
+                    return 1;
+                } else if (b[heading] === undefined) {
+                    return -1;
+                }
+                //numerically
+                else if (heading === "name") {
+                    return b[heading].first.localeCompare(a[heading].first);
+                } else {
+                    return b[heading] - a[heading];
+                }
+            }
+        }
+        const sortedUsers = this.state.filteredResults.sort(compareFnc);
+        this.setState({ filteredResults: sortedUsers });
+    }
+
+    // onSortChange = () => {
+    //     const sortTypes = {
+    //         up: {
+    //             class: 'sort-up',
+    //             fn: (a, b) => a.this.state.results.name.first - b.this.state.results.name.first
+    //         },
+    //         down: {
+    //             class: 'sort-down',
+    //             fn: (a, b) => b.this.state.results.name.first - a.this.state.results.name.first
+    //         },
+    //         default: {
+    //             class: 'sort',
+    //             fn: (a, b) => a
+    //         }
+    //     };
+
+    //     const { currentSort } = this.state;
+    //     let nextSort;
+
+    //     if (currentSort === "down") {
+    //         nextSort = "up";
+    //     } else if (currentSort === "up") {
+    //         nextSort = "default";
+    //     } else if (currentSort === "default") {
+    //         nextSort = "down";
+    //     }
+
+    //     this.setState({
+    //         currentSort: nextSort
+    //     });
+    // };
 
     // sortBy = (key, primary = 0, secondary = 0) => {
     //     let sortedEmps = this.state.filteredResults;
@@ -96,23 +163,6 @@ class SearchEmployeeContainer extends Component {
     //     }
     // };
 
-    // searchByEmployee = (input) => {
-    //     if (input) {
-    //         this.setState({
-    //             filteredResults: this.state.results.filter((employee) => {
-    //                 return (
-    //                     employee.name.first
-    //                         .toLowerCase()
-    //                         .toLowerCase()
-    //                         .includes(input)
-    //                 );
-    //             }),
-    //         });
-    //     } else {
-    //         this.setState({ filteredResults: this.state.results });
-    //     }
-    // };
-
     render() {
         return (
             <div className="container">
@@ -123,10 +173,10 @@ class SearchEmployeeContainer extends Component {
                     handleFormSubmit={this.handleFormSubmit}
                 />
                 <EmployeeTable
-                    results={this.state.results}
+
                     filteredResults={this.state.filteredResults}
-                    onSortChange={this.state}
-                // sortBy={this.sortBy}
+                    tableHeadings={this.tableHeadings}
+                    handleSort={this.handleSort}
                 />
             </div>
         );
